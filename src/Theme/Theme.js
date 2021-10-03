@@ -24,4 +24,13 @@ export const darkTheme = createTheme({
    typography: {
       fontFamily: 'Nunito Sans, sans-serif',
    },
+   components: {
+      MuiInputLabel: {
+         styleOverrides: {
+            root: {
+               color: 'hsl(0, 0%, 100%)',
+            },
+         },
+      },
+   },
 });

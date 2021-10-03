@@ -1,74 +1,59 @@
-import {
-   FormControl,
-   Grid,
-   InputAdornment,
-   InputLabel,
-   MenuItem,
-   OutlinedInput,
-   Select,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import React from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const useStyle = makeStyles({
-   inputStyles: {
-      background: 'hsl(209, 23%, 22%)',
-      color: 'hsl(0, 0%, 100%)',
-      ':placeholder': {
-         color: 'hsl(0, 0%, 100%)',
-      },
-   },
-});
+import FilterSelect from '../FilterSelect/FilterSelect';
+import SearchInput from '../SearhInput/SearchInput';
+
+import { makeStyles } from '@mui/styles';
+import { Grid } from '@mui/material';
+import Country from '../Country/Country';
 
 const Home = () => {
-   const classes = useStyle();
+   const [countries, setCountries] = useState([]);
+   const [displayCountries, setDisplayCountries] = useState([]);
+   const [searchTerm, setSearchTerm] = useState('');
+
+   useEffect(() => {
+      axios.get('https://restcountries.com/v3.1/all').then((res) => {
+         setCountries(res.data);
+         setDisplayCountries(res.data);
+      });
+   }, []);
+
+   const handleChange = (e) => {
+      // setSearchTerm(e.target.value);
+      const matchedCountries = countries.filter((country) => {
+         return country.name.common.toLowerCase().includes(e.target.value);
+      });
+      setDisplayCountries(matchedCountries);
+   };
+
    return (
-      <Grid container sx={{ background: 'hsl(207, 26%, 17%)' }}>
-         <Grid item container sx={{justifyContent: 'space-around'}}>
+      <Grid container sx={{ background: 'hsl(207, 26%, 17%)', pt: 4 }}>
+         <Grid item container sx={{ justifyContent: 'space-between', pb: 4 }}>
             <Grid item sm={1}></Grid>
-            <Grid item sm={4}>
-               <FormControl sx={{ m: 2, width: '25ch' }} variant='outlined'>
-                  <OutlinedInput
-                     id='outlined-adornment-weight'
-                     // value={values.weight}
-                     // onChange={handleChange('weight')}
-                     startAdornment={
-                        <InputAdornment position='start'>
-                           <SearchIcon color='warning' />
-                        </InputAdornment>
-                     }
-                     aria-describedby='outlined-weight-helper-text'
-                     inputProps={{
-                        'aria-label': 'weight',
-                     }}
-                     placeholder='Search for a country...'
-                     className={classes.inputStyles}
-                  />
-               </FormControl>
+            <Grid item sm={7}>
+               <SearchInput handleChange={handleChange} />
             </Grid>
-            <Grid item sm={2}>
-               <Box sx={{ minWidth: 120, m: 2 }}>
-                  <FormControl fullWidth>
-                     <InputLabel id='demo-simple-select-label' color='warning'>Filter By Region</InputLabel>
-                     <Select
-                        labelId='demo-simple-select-label'
-                        id='demo-simple-select'
-                        label='Age'
-                        className={classes.inputStyles}
-                     >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                     </Select>
-                  </FormControl>
-               </Box>
+            <Grid item sm={3}>
+               <FilterSelect />
             </Grid>
             <Grid item sm={1}></Grid>
          </Grid>
          <Grid item container>
-            country list
+            <Grid item sm={1}></Grid>
+            <Grid
+               item
+               container
+               sm={10}
+               sx={{ justifyContent: 'center' }}
+               spacing={5}
+            >
+               {displayCountries.map((country) => (
+                  <Country key={country.name.common} country={country} />
+               ))}
+            </Grid>
+            <Grid item sm={1}></Grid>
          </Grid>
       </Grid>
    );
