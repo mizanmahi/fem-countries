@@ -1,23 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import FilterSelect from '../FilterSelect/FilterSelect';
+// import FilterSelect from '../FilterSelect/FilterSelect';
 import SearchInput from '../SearhInput/SearchInput';
 
-import { makeStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
 import Country from '../Country/Country';
 
 const Home = () => {
    const [countries, setCountries] = useState([]);
    const [displayCountries, setDisplayCountries] = useState([]);
-   const [searchTerm, setSearchTerm] = useState('');
+   // const [searchTerm, setSearchTerm] = useState('');
 
    useEffect(() => {
-      axios.get('https://restcountries.com/v3.1/all').then((res) => {
-         setCountries(res.data);
-         setDisplayCountries(res.data);
-      });
+      let cancelToken = axios.CancelToken.source('CancelToken');
+
+      axios
+         .get('https://restcountries.com/v3.1/all', {
+            cancelToken: cancelToken.token,
+         })
+         .then((res) => {
+            console.log(res);
+            setCountries(res.data);
+            setDisplayCountries(res.data);
+         })
+         .catch((err) => {
+            console.log(err);
+         });
+
+      return () => {
+         if (cancelToken) {
+            cancelToken.cancel('Cancelling the country request');
+         }
+      };
    }, []);
 
    const handleChange = (e) => {
@@ -36,7 +51,7 @@ const Home = () => {
                <SearchInput handleChange={handleChange} />
             </Grid>
             <Grid item sm={3}>
-               <FilterSelect />
+               {/* <FilterSelect /> */}
             </Grid>
             <Grid item sm={1}></Grid>
          </Grid>
@@ -49,7 +64,7 @@ const Home = () => {
                sx={{ justifyContent: 'center' }}
                spacing={5}
             >
-               {displayCountries.map((country) => (
+               {displayCountries?.map((country) => (
                   <Country key={country.name.common} country={country} />
                ))}
             </Grid>

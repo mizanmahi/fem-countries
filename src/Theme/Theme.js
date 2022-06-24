@@ -28,7 +28,7 @@ export const darkTheme = createTheme({
       MuiInputLabel: {
          styleOverrides: {
             root: {
-               color: 'hsl(0, 0%, 100%)',
+               color: 'hsl(0, 0%, 100%) !important',
             },
          },
       },

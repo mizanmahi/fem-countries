@@ -1,0 +1,12 @@
+.inputStyles:focus,
+.inputStyles:hover {
+   outline: none !important;
+  
+}
+
+
+.MuiOutlinedInput-root:hover fieldset	{
+    border: 0;
+}
+
+

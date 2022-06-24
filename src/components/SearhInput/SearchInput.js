@@ -2,6 +2,7 @@ import React from 'react';
 import { FormControl, InputAdornment, OutlinedInput } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
+import './searchInput.css';
 
 const useStyle = makeStyles({
    inputStyles: {
@@ -10,7 +11,7 @@ const useStyle = makeStyles({
    },
 });
 
-const SearchInput = ({handleChange}) => {
+const SearchInput = ({ handleChange }) => {
    const classes = useStyle();
 
    return (
@@ -18,8 +19,13 @@ const SearchInput = ({handleChange}) => {
          <OutlinedInput
             fullWidth
             id='outlined-adornment-weight'
-            // value={values.weight}
-            // onChange={handleChange('weight')}
+            sx={{
+               color: 'hsl(0, 0%, 100%)',
+               background: 'hsl(209, 23%, 22%)',
+               '&::placeholder': {
+                  color: '#fff',
+               },
+            }}
             startAdornment={
                <InputAdornment position='start'>
                   <SearchIcon color='warning' />
